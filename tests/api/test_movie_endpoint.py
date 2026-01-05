@@ -51,21 +51,30 @@ class TestMovies:
         assert resp_get.status_code == 404, (f"Expected 404 , got {resp_get.status_code}."
                                          f" "f"Response: {resp_get.text}")
 
-    def test_get_movies_by_published(self, authorized_api_manager):
+    def test_get_movies_by_price(self, authorized_api_manager):
+        price = 200
         resp = authorized_api_manager.movies_api.get_movies(
-            params={"published": True}
+            params={"price": price}
         )
-
-        assert resp.status_code == 200 ,(f"Expected 200 OK, got {resp.status_code}."
-                                                f" "f"Response: {resp.text}")
-
         movies = resp.json()["movies"]
-        assert movies, "Фильмы не вернулись"
+        assert movies, "Фильмы по фильтру price не вернулись"
 
         assert any(
-            movie.get("published") is True
+            movie.get("price") == price
             for movie in movies
-        ), "Фильм не вышел"
+        ), f"Нет фильмов с price={price}"
+
+        assert resp.status_code == 200, (
+            f"Expected 200 OK, got {resp.status_code}. Response: {resp.text}"
+        )
+
+        movies = resp.json()["movies"]
+        assert movies, "Фильмы по фильтру price не вернулись"
+
+        assert any(
+            movie.get("price") == price
+            for movie in movies
+        ), f"Нет фильмов с price={price}"
 
     @pytest.mark.negative
     def test_create_movie_invalid_body(self, authorized_api_manager):

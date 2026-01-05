@@ -6,14 +6,12 @@ class MoviesApi(CustomRequester):
 
 
     def create_movie(self, movie_data, expected_status=201):
-        resp = self.send_request(
+        return self.send_request(
             method="POST",
             endpoint="/movies",
             data=movie_data,
             expected_status=expected_status
         )
-
-        return resp
 
 
     def get_movies(self, params=None, expected_status=200):
