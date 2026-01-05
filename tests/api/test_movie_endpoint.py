@@ -1,10 +1,6 @@
 import pytest
-import requests
+from constants import   REQUIRED_FIELDS
 
-from conftest import session
-from constants import BASE_AUTH_URL, HEADERS, REGISTER_ENDPOINT,  REQUIRED_FIELDS , SUPER_SECRET_DANNIE
-from custom_requester.custom_requester import CustomRequester
-from api.api_manager import ApiManager
 
 class TestMovies:
     def test_create_movie(self,movie_data, authorized_api_manager):
@@ -20,11 +16,11 @@ class TestMovies:
         assert resp_get.status_code == 200, (f"Expected 200 OK, got {resp_get.status_code}."
                                              f" "f"Response: {resp_get.text}")
 
-    def test_get_movies(self,created_movie,api_manager: ApiManager):
-        resp = api_manager.movies_api.get_movies()
+    def test_get_movies(self,authorized_api_manager):
+        resp = authorized_api_manager.movies_api.get_movies()
         resp_data = resp.json()
         movies = resp_data["movies"]
-        assert resp.status_code == 201 or 200, (f"Expected 201 OK, got {resp.status_code}."
+        assert resp.status_code == 200, (f"Expected 200 OK, got {resp.status_code}."
                                                 f" "f"Response: {resp.text}")
         assert movies, "Список фильмов пуст"
         for movie in movies:
@@ -38,7 +34,7 @@ class TestMovies:
             patch_data=patch_data
         )
 
-        assert resp.status_code == 201 or 200, (f"Expected 201 OK, got {resp.status_code}."
+        assert resp.status_code == 200, (f"Expected 200 OK, got {resp.status_code}."
                                                 f" "f"Response: {resp.text}")
         assert resp.json()["price"] == patch_data["price"]
 
@@ -85,8 +81,8 @@ class TestMovies:
                                                 f" "f"Response: {resp.text}")
 
     @pytest.mark.negative
-    def test_get_movie_not_found(self, api_manager: ApiManager):
-        resp = api_manager.movies_api.get_movie_by_id(
+    def test_get_movie_not_found(self, authorized_api_manager):
+        resp = authorized_api_manager.movies_api.get_movie_by_id(
             movie_id=-1,
             expected_status=404
         )

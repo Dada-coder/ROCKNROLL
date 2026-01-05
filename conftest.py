@@ -21,7 +21,7 @@ def authorized_api_manager(api_manager):
 @pytest.fixture(scope="session")
 def unauthorized_api_manager():
     import requests
-    session = requests.Session()  # 🔥 ДРУГАЯ SESSION
+    session = requests.Session()
     return ApiManager(session)
 
 @pytest.fixture(scope="session")
