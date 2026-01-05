@@ -1,26 +1,28 @@
+from dotenv import load_dotenv
+load_dotenv()
 from api.api_manager import ApiManager
 from faker import Faker
 import pytest
 import requests
-from constants import BASE_AUTH_URL, REGISTER_ENDPOINT, LOGIN_ENDPOINT, SUPER_FUCN_SECRET_DANNIE
+from constants import BASE_AUTH_URL, REGISTER_ENDPOINT, LOGIN_ENDPOINT, SUPER_SECRET_DANNIE
 from custom_requester.custom_requester import CustomRequester
 from utils.data_generator import DataGenerator
 
 faker = Faker()
 
-@pytest.fixture
-def created_movie(api_manager, movie_data):
-    api_manager.auth_api.authenticate(SUPER_FUCN_SECRET_DANNIE)
-    resp = api_manager.movies_api.create_movie(movie_data)
-    movie_id = resp.json()["id"]
-
-    yield movie_id
-
-    api_manager.movies_api.delete_movies(movie_id)
 
 
 
+@pytest.fixture(scope="session")
+def authorized_api_manager(api_manager):
+    api_manager.auth_api.authenticate(SUPER_SECRET_DANNIE)
+    return api_manager
 
+@pytest.fixture(scope="session")
+def unauthorized_api_manager():
+    import requests
+    session = requests.Session()  # 🔥 ДРУГАЯ SESSION
+    return ApiManager(session)
 
 @pytest.fixture(scope="session")
 def test_user():
@@ -83,3 +85,17 @@ def api_manager(session):
 @pytest.fixture
 def movie_data():
     return DataGenerator.generate_movie_data()
+
+
+@pytest.fixture
+def created_movie(authorized_api_manager, movie_data):
+    resp = authorized_api_manager.movies_api.create_movie(movie_data)
+    movie_id = resp.json()["id"]
+
+    yield movie_id
+
+
+    try:
+        authorized_api_manager.movies_api.delete_movies(movie_id)
+    except ValueError:
+        pass

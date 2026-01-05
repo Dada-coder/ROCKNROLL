@@ -1,10 +1,12 @@
 from custom_requester.custom_requester import CustomRequester
 from conftest import *
+from api.auth_api import *
+
 
 class MoviesApi(CustomRequester):
     def __init__(self, session):
         super().__init__(session=session, base_url="https://api.dev-cinescope.coconutqa.ru")
-        self.created_movie_id = None
+
 
     def create_movie(self, movie_data, expected_status=201):
         resp = self.send_request(
@@ -13,10 +15,6 @@ class MoviesApi(CustomRequester):
             data=movie_data,
             expected_status=expected_status
         )
-
-
-        if expected_status == 201:
-            self.created_movie_id = resp.json().get("id")
 
         return resp
 
