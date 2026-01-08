@@ -13,11 +13,9 @@ class DataGenerator:
         random_string = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
         return f"kek{random_string}@gmail.com"
 
-
     @staticmethod
     def generate_random_name():
         return f"{faker.first_name()} {faker.last_name()}"
-
 
     @staticmethod
     def generate_random_password():
@@ -39,15 +37,14 @@ class DataGenerator:
 
         return ''.join(password)
 
-
     @staticmethod
     def generate_movie_data():
-            return {
-                "name": f"Test Movie {uuid.uuid4()}",
-                "imageUrl": faker.image_url(),
-                "price": faker.random_int(min=100, max=1000),
-                "description": faker.text(max_nb_chars=200),
-                "location": random.choice(["SPB", "MSK"]),
-                "published": True,
-                "genreId": 1
-            }
+        return {
+            "name": f"Test Movie {uuid.uuid4()}",
+            "imageUrl": faker.image_url(),
+            "price": faker.random_int(min=100, max=1000),
+            "description": faker.text(max_nb_chars=200),
+            "location": random.choice(["SPB", "MSK"]),
+            "published": True,
+            "genreId": 1
+        }

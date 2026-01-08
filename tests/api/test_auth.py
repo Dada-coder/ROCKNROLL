@@ -1,6 +1,8 @@
 from api.api_manager import ApiManager
 
+
 class TestAuthAPI:
+
     def test_register_user(self, api_manager: ApiManager, test_user):
         """
         Тест на регистрацию пользователя.
@@ -18,10 +20,7 @@ class TestAuthAPI:
         """
         Тест на регистрацию и авторизацию пользователя.
         """
-        login_data = {
-            "email": registered_user["email"],
-            "password": registered_user["password"]
-        }
+        login_data = {"email": registered_user["email"], "password": registered_user["password"]}
         response = api_manager.auth_api.login_user(login_data)
         response_data = response.json()
 

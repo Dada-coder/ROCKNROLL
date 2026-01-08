@@ -13,6 +13,7 @@ def requester():
     session = requests.Session()
     return CustomRequester(session=session, base_url=BASE_AUTH_URL)
 
+
 @pytest.fixture(scope="session")
 def http_session():
     """
@@ -21,6 +22,7 @@ def http_session():
     http_session = requests.Session()
     yield http_session
     http_session.close()
+
 
 @pytest.fixture(scope="session")
 def api_manager(http_session):

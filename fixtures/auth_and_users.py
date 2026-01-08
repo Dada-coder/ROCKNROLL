@@ -1,18 +1,21 @@
 from api.api_manager import ApiManager
 import pytest
+import requests
 from constants import REGISTER_ENDPOINT, SUPER_SECRET_DANNIE
 from utils.data_generator import DataGenerator
+
 
 @pytest.fixture
 def authorized_api_manager(api_manager):
     api_manager.auth_api.authenticate(SUPER_SECRET_DANNIE)
     return api_manager
 
+
 @pytest.fixture(scope="session")
 def unauthorized_api_manager():
-    import requests
     session = requests.Session()
     return ApiManager(session)
+
 
 @pytest.fixture(scope="session")
 def test_user():
@@ -31,16 +34,14 @@ def test_user():
         "roles": ["USER"]
     }
 
-@pytest.fixture(scope="session")
+
+@pytest.fixture
 def registered_user(requester, test_user):
     """
     Фикстура для регистрации и получения данных зарегистрированного пользователя.
     """
     response = requester.send_request(
-        method="POST",
-        endpoint=REGISTER_ENDPOINT,
-        data=test_user,
-        expected_status=201
+        method="POST", endpoint=REGISTER_ENDPOINT, data=test_user, expected_status=201
     )
     response_data = response.json()
     registered_user = test_user.copy()

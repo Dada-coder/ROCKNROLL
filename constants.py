@@ -11,5 +11,4 @@ SUPER_SECRET_DANNIE = {
     "password": os.getenv("SUPER_SECRET_DANNIE_2")
 }
 
-REQUIRED_FIELDS = {"id", "name", "price", "location"}
-
+REQUIRED_FIELDS = {"name", "price", "description", "location"}

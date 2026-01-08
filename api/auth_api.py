@@ -1,6 +1,7 @@
 from custom_requester.custom_requester import CustomRequester
 from constants import LOGIN_ENDPOINT, REGISTER_ENDPOINT
 
+
 class AuthAPI(CustomRequester):
 
     def __init__(self, session):
@@ -33,10 +34,7 @@ class AuthAPI(CustomRequester):
         )
 
     def authenticate(self, user_creds):
-        login_data = {
-            "email": user_creds["email"],
-            "password": user_creds["password"]
-        }
+        login_data = {"email": user_creds["email"], "password": user_creds["password"]}
 
         response = self.login_user(login_data).json()
         if "accessToken" not in response:
