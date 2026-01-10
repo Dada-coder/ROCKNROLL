@@ -1,9 +1,12 @@
 from constants import REQUIRED_FIELDS
+import pytest
+from utils.data_generator import DataGenerator
 
 
 class TestMoviesPositive:
 
     def test_get_movies_pos(self, authorized_api_manager, created_movie, senior_polish):
+        assert authorized_api_manager.movies_api.get_movie_by_id(created_movie)
         resp = authorized_api_manager.movies_api.get_movies()
         resp_data = resp.json()
         movies = resp_data["movies"]
@@ -11,7 +14,9 @@ class TestMoviesPositive:
         for movie in movies:
             assert REQUIRED_FIELDS.issubset(movie), f"Неполная структура фильма: {movie}"
 
-    def test_get_movies_by_price_pos(self, authorized_api_manager):
+    @pytest.mark.parametrize("updated_data", [DataGenerator.generate_movie_data()], indirect=True)
+    def test_get_movies_by_price_pos(self, updated_data, authorized_api_manager):
+        authorized_api_manager.movies_api.create_movie(updated_data)
         price = 200
         resp = authorized_api_manager.movies_api.get_movies(params={"price": price})
         movies = resp.json()["movies"]

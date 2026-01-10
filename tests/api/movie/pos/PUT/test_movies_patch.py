@@ -8,7 +8,8 @@ class TestMoviesPositive:
         )
         assert resp.json()["price"] == patch_data["price"]
         assert resp.json()["price"] != resp_get.json()["price"]
-        resp_get = authorized_api_manager.movies_api.get_movie_by_id(created_movie)
+        resp_get_patched = authorized_api_manager.movies_api.get_movie_by_id(created_movie)
+        assert resp_get_patched.json()["price"] == patch_data["price"]
 
     def test_patch_movie_description_pos(
         self, authorized_api_manager, created_movie, senior_polish
@@ -21,3 +22,5 @@ class TestMoviesPositive:
         )
 
         assert resp.json()["description"] == patch_data["description"]
+        resp_get_patched = authorized_api_manager.movies_api.get_movie_by_id(created_movie)
+        assert resp_get_patched.json()["description"] == patch_data["description"]

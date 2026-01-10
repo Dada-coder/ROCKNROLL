@@ -7,7 +7,7 @@ class TestMoviesNegative:
     def test_patch_movie_unauthorized_neg(
         self, created_movie, unauthorized_api_manager, senior_polish
     ):
-        resp = unauthorized_api_manager.movies_api.patch_movie(
+        unauthorized_api_manager.movies_api.patch_movie(
             movie_id=created_movie, patch_data={"price": 999}, expected_status=401
         )
 

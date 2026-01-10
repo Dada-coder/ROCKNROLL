@@ -1,3 +1,4 @@
+from checkers.movie_response_checker import UtilsCheck
 import pytest
 from constants import REQUIRED_FIELDS
 
@@ -7,11 +8,10 @@ class TestMovies:
     def test_create_movie_pos(self, movie_data, authorized_api_manager, senior_polish):
         resp = authorized_api_manager.movies_api.create_movie(movie_data)
         resp_data = resp.json()
-        authorized_api_manager.movies_api.body_check(movie_data, resp_data)
+        UtilsCheck.body_check(movie_data, resp.json())
 
         resp_get = authorized_api_manager.movies_api.get_movie_by_id(movie_id=resp_data['id'])
-        resp_get_data = resp_get.json()
-        authorized_api_manager.movies_api.body_check(movie_data, resp_get_data)
+        UtilsCheck.body_check(movie_data, resp_get.json())
 
     def test_get_movies_pos(self, authorized_api_manager, created_movie, senior_polish):
         resp = authorized_api_manager.movies_api.get_movies()
@@ -29,13 +29,11 @@ class TestMovies:
         )
         assert resp.json()["price"] == patch_data["price"]
         assert resp.json()["price"] != resp_get.json()["price"]
-        resp_get = authorized_api_manager.movies_api.get_movie_by_id(created_movie)
+        authorized_api_manager.movies_api.get_movie_by_id(created_movie)
 
     def test_delete_movie_pos(self, authorized_api_manager, created_movie, senior_polish):
-        resp = authorized_api_manager.movies_api.delete_movies(created_movie)
-        resp_get = authorized_api_manager.movies_api.get_movie_by_id(
-            created_movie, expected_status=404
-        )
+        authorized_api_manager.movies_api.delete_movies(created_movie)
+        authorized_api_manager.movies_api.get_movie_by_id(created_movie, expected_status=404)
 
     def test_get_movies_by_price_pos(self, authorized_api_manager):
         price = 200
@@ -58,19 +56,19 @@ class TestMovies:
     def test_create_movie_invalid_body_neg(self, authorized_api_manager):
 
         invalid_data = {"name": None}
-        resp = authorized_api_manager.movies_api.create_movie(invalid_data, expected_status=400)
+        authorized_api_manager.movies_api.create_movie(invalid_data, expected_status=400)
 
     @pytest.mark.negative
     def test_get_movie_not_found_neg(self, authorized_api_manager):
-        resp = authorized_api_manager.movies_api.get_movie_by_id(movie_id=-1, expected_status=404)
+        authorized_api_manager.movies_api.get_movie_by_id(movie_id=-1, expected_status=404)
 
     @pytest.mark.negative
     def test_patch_movie_unauthorized_neg(self, created_movie, unauthorized_api_manager):
 
-        resp = unauthorized_api_manager.movies_api.patch_movie(
+        unauthorized_api_manager.movies_api.patch_movie(
             movie_id=created_movie, patch_data={"price": 999}, expected_status=401
         )
 
     @pytest.mark.negative
     def test_create_movie_unauthorized_neg(self, movie_data, unauthorized_api_manager):
-        resp = unauthorized_api_manager.movies_api.create_movie(movie_data, expected_status=401)
+        unauthorized_api_manager.movies_api.create_movie(movie_data, expected_status=401)

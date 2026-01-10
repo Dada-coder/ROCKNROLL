@@ -5,6 +5,7 @@ BASE_MOVIE_URL = "https://api.dev-cinescope.coconutqa.ru"
 
 LOGIN_ENDPOINT = "/login"
 REGISTER_ENDPOINT = "/register"
+MOVIES_ENDPOINT = "/movies"
 
 SUPER_SECRET_DANNIE = {
     "email": os.getenv("SUPER_SECRET_DANNIE_1"),

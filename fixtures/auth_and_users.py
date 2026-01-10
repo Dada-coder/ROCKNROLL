@@ -18,7 +18,7 @@ def unauthorized_api_manager():
 
 
 @pytest.fixture(scope="session")
-def test_user():
+def create_test_user():
     """
     Генерация случайного пользователя для тестов.
     """

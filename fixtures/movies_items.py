@@ -42,3 +42,10 @@ def senior_polish(authorized_api_manager):
                 logger.warning(f"⚠️ Failed to delete movie id={movie_id}, error={e}")
 
     logger.info("🧹 Cleanup finished")
+
+
+@pytest.fixture
+def updated_data(request):
+    data = request.param
+    data["price"] = 200
+    return data
