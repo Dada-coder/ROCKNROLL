@@ -1,4 +1,12 @@
 import os
+from enum import Enum
+
+
+class Roles(Enum):
+    USER = "USER"
+    ADMIN = "ADMIN"
+    SUPER_ADMIN = "SUPER_ADMIN"
+
 
 BASE_AUTH_URL = "https://auth.dev-cinescope.coconutqa.ru"
 BASE_MOVIE_URL = "https://api.dev-cinescope.coconutqa.ru"
