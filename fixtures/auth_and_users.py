@@ -1,8 +1,22 @@
 from api.api_manager import ApiManager
 import pytest
 import requests
-from constants import REGISTER_ENDPOINT, SUPER_SECRET_DANNIE
+from constants import REGISTER_ENDPOINT, SUPER_SECRET_DANNIE, Roles
 from utils.data_generator import DataGenerator
+from entities.User import User
+
+
+@pytest.fixture
+def super_admin(user_session):
+    new_session = user_session()
+
+    super_admin = User(
+        SUPER_SECRET_DANNIE["email"], SUPER_SECRET_DANNIE["password"], [Roles.SUPER_ADMIN.value],
+        new_session
+    )
+
+    super_admin.api.auth_api.authenticate(super_admin.creds)
+    return super_admin
 
 
 @pytest.fixture
@@ -17,22 +31,24 @@ def unauthorized_api_manager():
     return ApiManager(session)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture
 def create_test_user():
-    """
-    Генерация случайного пользователя для тестов.
-    """
-    random_email = DataGenerator.generate_random_email()
-    random_name = DataGenerator.generate_random_name()
     random_password = DataGenerator.generate_random_password()
 
     return {
-        "email": random_email,
-        "fullName": random_name,
+        "email": DataGenerator.generate_random_email(),
+        "fullName": DataGenerator.generate_random_name(),
         "password": random_password,
         "passwordRepeat": random_password,
-        "roles": ["USER"]
+        "roles": [Roles.USER.value]
     }
+
+
+@pytest.fixture(scope="function")
+def creation_user_data(create_test_user):
+    updated_data = create_test_user.copy()
+    updated_data.update({"verified": True, "banned": False})
+    return updated_data
 
 
 @pytest.fixture
@@ -47,3 +63,40 @@ def registered_user(requester, test_user):
     registered_user = test_user.copy()
     registered_user["id"] = response_data["id"]
     return registered_user
+
+
+@pytest.fixture
+def user_session():
+    user_pool = []
+
+    def _create_user_session():
+        session = requests.Session()
+        user_session = ApiManager(session)
+        user_pool.append(user_session)
+        return user_session
+
+    yield _create_user_session
+
+    for user in user_pool:
+        user.close_session()
+
+
+@pytest.fixture
+def common_user(user_session, super_admin, creation_user_data):
+    new_session = user_session()
+
+    common_user = User(
+        creation_user_data['email'], creation_user_data['password'], [Roles.USER.value], new_session
+    )
+
+    super_admin.api.user_api.create_user(creation_user_data)
+    common_user.api.auth_api.authenticate(common_user.creds)
+    return common_user
+
+
+@pytest.fixture
+def input_role(request, super_admin, common_user):
+    if request.param == "admin_user":
+        return super_admin
+    if request.param == "common_user":
+        return common_user
