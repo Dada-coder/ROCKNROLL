@@ -8,13 +8,9 @@ class CustomRequester:
     """
     Кастомный реквестер для стандартизации и упрощения отправки HTTP-запросов.
     """
-    base_headers = {
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-    }
+    base_headers = {"Content-Type": "application/json", "Accept": "application/json"}
 
     def __init__(self, session, base_url):
-
         """
         Инициализация кастомного реквестера.
         :param session: Объект requests.Session.
@@ -26,8 +22,9 @@ class CustomRequester:
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.INFO)
 
-
-    def send_request(self, method, endpoint, data=None,params=None, expected_status=200, need_logging=True):
+    def send_request(
+        self, method, endpoint, data=None, params=None, expected_status=200, need_logging=True
+    ):
         """
         Универсальный метод для отправки запросов.
         :param method: HTTP метод (GET, POST, PUT, DELETE и т.д.).
@@ -39,14 +36,14 @@ class CustomRequester:
         """
 
         url = f"{self.base_url}{endpoint}"
-        response = self.session.request(method, url, params = params, json=data, headers=self.headers)
+        response = self.session.request(method, url, params=params, json=data, headers=self.headers)
         if need_logging:
             self.log_request_and_response(response)
         if response.status_code != expected_status:
-            raise ValueError(f"Unexpected status code: {response.status_code}. Expected: {expected_status}")
+            raise ValueError(
+                f"Unexpected status code: {response.status_code}. Expected: {expected_status}"
+            )
         return response
-
-
 
     def _update_session_headers(self, **kwargs):
         """
@@ -57,9 +54,7 @@ class CustomRequester:
         self.headers.update(kwargs)  # Обновляем базовые заголовки
         self.session.headers.update(self.headers)  # Обновляем заголовки в текущей сессии
 
-
     def log_request_and_response(self, response):
-
         """
         Логирование запросов и ответов.
         :param response: Объект ответа requests.Response.
@@ -69,7 +64,9 @@ class CustomRequester:
             GREEN = '\033[32m'
             RED = '\033[31m'
             RESET = '\033[0m'
-            headers = " \\\n".join([f"-H '{header}: {value}'" for header, value in request.headers.items()])
+            headers = " \\\n".join(
+                [f"-H '{header}: {value}'" for header, value in request.headers.items()]
+            )
             full_test_name = f"pytest {os.environ.get('PYTEST_CURRENT_TEST', '').replace(' (call)', '')}"
 
             body = ""
