@@ -51,7 +51,26 @@ class DBHelper:
 
     def DB_get_movie_by_name(self, name):
         """Получает пользователя по email"""
-        return self.db_session.query(UserDBModel).filter(MovieDBModel.name == name).first()
+        return self.db_session.query(MovieDBModel).filter(MovieDBModel.name == name).first()
+
+    def DB_create_test_movie(self, mv_data) -> MovieDBModel:
+        """Создает тестового пользователя"""
+        movie = MovieDBModel(**mv_data)
+        self.db_session.add(movie)
+        self.db_session.commit()
+        self.db_session.refresh(movie)
+        return movie
+
+    def DB_delete_movie(self, movie: MovieDBModel):
+        """Удаляет пользователя"""
+        self.db_session.delete(movie)
+        self.db_session.commit()
+
+    def DB_delete_movie_by_id(self, movie_id: str):
+        movie = self.db_session.get(MovieDBModel, movie_id)
+        if movie:
+            self.db_session.delete(movie)
+            self.db_session.commit()
 
 
 '''

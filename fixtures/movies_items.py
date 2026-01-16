@@ -35,10 +35,10 @@ def senior_polish(authorized_api_manager):
         try:
             resp = authorized_api_manager.movies_api.delete_movies(movie_id)
             logger.info(f"🗑 Deleted movie id={movie_id}, status={resp.status_code}")
+            logger.info(f"Delete response status={resp.status_code}, body={resp.text}")
         except Exception as e:
             logger.warning(f"⚠️ Failed to delete movie id={movie_id}, error={e}")
 
-    logger.info(f"Delete response status={resp.status_code}, body={resp.text}")
     logger.info("🧹 Cleanup finished")
 
 
