@@ -26,13 +26,6 @@ class TestUser(BaseModel):
             raise ValueError("Пароли не совпадают")
         return value
 
-    # Добавляем кастомный JSON-сериализатор для Enum
-    class Config:
-        json_encoders = {
-            Roles:
-                lambda v: v.value  # Преобразуем Enum в строку
-        }
-
 
 class RegisterUserResponse(BaseModel):
     id: str

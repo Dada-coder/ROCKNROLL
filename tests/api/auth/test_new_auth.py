@@ -15,7 +15,7 @@ class TestUser:
         register_user_response = RegisterUserResponse(**response)
         assert register_user_response.email == creation_user_data['email']
         assert register_user_response.fullName == creation_user_data['fullName']
-        assert response.get('roles', []) == creation_user_data['roles']
+        assert register_user_response.json_encoders == creation_user_data['roles']
 
     def test_get_user_by_locator(self, super_admin, creation_user_data):
         created_user_response = super_admin.api.user_api.create_user(creation_user_data).json()
