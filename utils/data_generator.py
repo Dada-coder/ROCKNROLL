@@ -42,12 +42,12 @@ class DataGenerator:
     def generate_movie_data():
         return {
             "name": f"Test Movie {uuid.uuid4()}",
-            "imageUrl": faker.image_url(),
+            "image_url": faker.image_url(),
             "price": faker.random_int(min=100, max=1000),
             "description": faker.text(max_nb_chars=200),
             "location": random.choice(["SPB", "MSK"]),
             "published": True,
-            "genreId": 1
+            "genre_id": 1
         }
 
     # data_generator.py
