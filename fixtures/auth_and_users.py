@@ -4,6 +4,7 @@ import requests
 from constants import REGISTER_ENDPOINT, SUPER_SECRET_DANNIE, Roles
 from utils.data_generator import DataGenerator
 from entities.User import User
+from pydantic_ex.pydentic_movie_data import TestUser, RegisterUserResponse
 
 
 @pytest.fixture
@@ -35,13 +36,14 @@ def unauthorized_api_manager():
 def create_test_user():
     random_password = DataGenerator.generate_random_password()
 
-    return {
-        "email": DataGenerator.generate_random_email(),
-        "fullName": DataGenerator.generate_random_name(),
-        "password": random_password,
-        "passwordRepeat": random_password,
-        "roles": [Roles.USER.value]
-    }
+    user = TestUser(
+        email=DataGenerator.generate_random_email(),
+        fullName=DataGenerator.generate_random_name(),
+        password=random_password,
+        passwordRepeat=random_password,
+        roles=[Roles.USER.value]
+    )
+    return user.model_dump(mode="json")
 
 
 @pytest.fixture(scope="function")
@@ -92,6 +94,20 @@ def common_user(user_session, super_admin, creation_user_data):
     super_admin.api.user_api.create_user(creation_user_data)
     common_user.api.auth_api.authenticate(common_user.creds)
     return common_user
+
+
+@pytest.fixture
+def admin(user_session, super_admin, creation_user_data):
+    new_session = user_session()
+
+    admin = User(
+        creation_user_data['email'], creation_user_data['password'], [Roles.ADMIN.value],
+        new_session
+    )
+
+    super_admin.api.user_api.create_user(creation_user_data)
+    admin.api.auth_api.authenticate(admin.creds)
+    return admin
 
 
 @pytest.fixture

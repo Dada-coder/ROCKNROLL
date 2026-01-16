@@ -21,3 +21,7 @@ SUPER_SECRET_DANNIE = {
 }
 
 REQUIRED_FIELDS = {"name", "price", "description", "location"}
+
+GREEN = '\033[32m'
+RED = '\033[31m'
+RESET = '\033[0m'

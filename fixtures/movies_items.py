@@ -8,6 +8,7 @@ logger.setLevel(logging.INFO)
 
 @pytest.fixture
 def movie_data():
+
     return DataGenerator.generate_movie_data()
 
 
