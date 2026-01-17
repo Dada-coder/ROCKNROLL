@@ -17,7 +17,7 @@ class TestMoviesPositive:
     @pytest.mark.parametrize("updated_data", [DataGenerator.generate_movie_data()], indirect=True)
     def test_get_movies_by_price_pos(self, updated_data, authorized_api_manager):
         authorized_api_manager.movies_api.create_movie(updated_data)
-        price = 200
+        price = 100
         resp = authorized_api_manager.movies_api.get_movies(params={"price": price})
         movies = resp.json()["movies"]
         assert movies, "Фильмы по фильтру price не вернулись"

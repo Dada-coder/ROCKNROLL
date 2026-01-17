@@ -8,6 +8,7 @@ logger.setLevel(logging.INFO)
 
 @pytest.fixture
 def movie_data():
+
     return DataGenerator.generate_movie_data()
 
 
@@ -21,25 +22,22 @@ def created_movie(authorized_api_manager, movie_data):
 
 @pytest.fixture
 def senior_polish(authorized_api_manager):
-    yield
+    """
+        Collect movie IDs during test and delete them after test finishes
+        """
+    movie_ids = []
 
-    logger.info("🧹 Cleanup started: removing test movies")
+    yield movie_ids
 
-    resp = authorized_api_manager.movies_api.get_movies()
-    movies = resp.json().get("movies", [])
+    logger.info("🧹 Cleanup started: removing created movies")
 
-    for movie in movies:
-        name = movie.get("name", "")
-        movie_id = movie.get("id")
-
-        if name.startswith("Test Movie"):
-            logger.info(f"🗑 Deleting movie id={movie_id}, name='{name}'")
-
-            try:
-                authorized_api_manager.movies_api.delete_movies(movie_id)
-                logger.info(f"✅ Deleted movie id={movie_id}")
-            except Exception as e:
-                logger.warning(f"⚠️ Failed to delete movie id={movie_id}, error={e}")
+    for movie_id in movie_ids:
+        try:
+            resp = authorized_api_manager.movies_api.delete_movies(movie_id)
+            logger.info(f"🗑 Deleted movie id={movie_id}, status={resp.status_code}")
+            logger.info(f"Delete response status={resp.status_code}, body={resp.text}")
+        except Exception as e:
+            logger.warning(f"⚠️ Failed to delete movie id={movie_id}, error={e}")
 
     logger.info("🧹 Cleanup finished")
 
