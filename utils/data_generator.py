@@ -39,7 +39,7 @@ class DataGenerator:
         return ''.join(password)
 
     @staticmethod
-    def generate_movie_data():
+    def generate_movie_data_for_db():
         return {
             "name": f"Test Movie {uuid.uuid4()}",
             "image_url": faker.image_url(),
@@ -48,6 +48,18 @@ class DataGenerator:
             "location": random.choice(["SPB", "MSK"]),
             "published": True,
             "genre_id": 1
+        }
+
+    @staticmethod
+    def generate_movie_data():
+        return {
+            "name": f"Test Movie {uuid.uuid4()}",
+            "imageUrl": faker.image_url(),
+            "price": faker.random_int(min=100, max=1000),
+            "description": faker.text(max_nb_chars=200),
+            "location": random.choice(["SPB", "MSK"]),
+            "published": True,
+            "genreId": 1
         }
 
     # data_generator.py

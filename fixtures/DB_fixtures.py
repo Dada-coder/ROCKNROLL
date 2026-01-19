@@ -1,7 +1,7 @@
 import pytest
 from sqlalchemy.orm import Session
 from DB.db_client import get_db_session
-from DB.DBHelper import DBHelper
+from DB.db_helper import DBHelper
 from utils.data_generator import DataGenerator
 
 
@@ -14,6 +14,12 @@ def db_session() -> Session:
     db_session = get_db_session()
     yield db_session
     db_session.close()
+
+
+@pytest.fixture
+def movie_data_for_db():
+
+    return DataGenerator.generate_movie_data_for_db()
 
 
 @pytest.fixture(scope="function")

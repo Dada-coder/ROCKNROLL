@@ -10,7 +10,7 @@ def test_multiply_by_two(input_data, expected):
     "input_minPrice,input_maxPrice,input_genreId", [(100, 300, 3), (110, 350, 1), (120, 400, 2)]
 )
 def test_multiply_filter(super_admin, senior_polish, input_minPrice, input_maxPrice, input_genreId):
-    a = super_admin.api.movies_api.get_movies(
+    super_admin.api.movies_api.get_movies(
         endpoint=
         f"/movies?minPrice={input_minPrice}&maxPrice={input_maxPrice}&genreId={input_genreId}"
     )

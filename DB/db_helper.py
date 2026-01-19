@@ -1,14 +1,13 @@
 from sqlalchemy.orm import Session
-from DB.modles.user_modles import UserDBModel
-from DB.modles.movies_modles import MovieDBModel
+from DB.models.user_models import UserDBModel
+from DB.models.movies_models import MovieDBModel
 
 
 class DBHelper:
+    """Класс с методами для работы с БД в тестах"""
 
     def __init__(self, db_session: Session):
         self.db_session = db_session
-
-    """Класс с методами для работы с БД в тестах"""
 
     def DB_create_test_user(self, user_data: dict) -> UserDBModel:
         """Создает тестового пользователя"""
@@ -50,11 +49,9 @@ class DBHelper:
         return self.db_session.query(MovieDBModel).filter(MovieDBModel.id == movie_id).first()
 
     def DB_get_movie_by_name(self, name):
-        """Получает пользователя по email"""
         return self.db_session.query(MovieDBModel).filter(MovieDBModel.name == name).first()
 
     def DB_create_test_movie(self, mv_data) -> MovieDBModel:
-        """Создает тестового пользователя"""
         movie = MovieDBModel(**mv_data)
         self.db_session.add(movie)
         self.db_session.commit()
@@ -62,7 +59,6 @@ class DBHelper:
         return movie
 
     def DB_delete_movie(self, movie: MovieDBModel):
-        """Удаляет пользователя"""
         self.db_session.delete(movie)
         self.db_session.commit()
 
@@ -71,11 +67,3 @@ class DBHelper:
         if movie:
             self.db_session.delete(movie)
             self.db_session.commit()
-
-
-'''
-Пример хелпера для movies
-def get_movie_by_id(self, movie_id: str):
-    """Получает фильм по ID"""
-    return self.db_session.query(MovieDBModel).filter(MovieDBModel.id == movie_id).first()
-'''

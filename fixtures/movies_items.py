@@ -45,5 +45,5 @@ def senior_polish(authorized_api_manager):
 @pytest.fixture
 def updated_data(request):
     data = request.param
-    data["price"] = 200
+    data["price"] = 338
     return data
