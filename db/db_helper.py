@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from DB.models.user_models import UserDBModel
-from DB.models.movies_models import MovieDBModel
+from db.models.user_models import UserDBModel
+from db.models.movies_models import MovieDBModel
 
 
 class DBHelper:

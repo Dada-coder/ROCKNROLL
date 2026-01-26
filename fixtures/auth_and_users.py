@@ -53,19 +53,6 @@ def creation_user_data(create_test_user):
     return updated_data
 
 
-@pytest.fixture
-def registered_user(requester, test_user):
-    """
-    Фикстура для регистрации и получения данных зарегистрированного пользователя.
-    """
-    response = requester.send_request(
-        method="POST", endpoint=REGISTER_ENDPOINT, data=test_user, expected_status=201
-    )
-    response_data = response.json()
-    registered_user = test_user.copy()
-    registered_user["id"] = response_data["id"]
-    return registered_user
-
 
 @pytest.fixture
 def user_session():

@@ -1,7 +1,7 @@
 import pytest
 from sqlalchemy.orm import Session
-from DB.db_client import get_db_session
-from DB.db_helper import DBHelper
+from db.db_client import get_db_session
+from db.db_helper import DBHelper
 from utils.data_generator import DataGenerator
 
 
