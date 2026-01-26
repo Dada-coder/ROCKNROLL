@@ -1,3 +1,4 @@
+import datetime
 import random
 import string
 from faker import Faker
@@ -38,6 +39,18 @@ class DataGenerator:
         return ''.join(password)
 
     @staticmethod
+    def generate_movie_data_for_db():
+        return {
+            "name": f"Test Movie {uuid.uuid4()}",
+            "image_url": faker.image_url(),
+            "price": faker.random_int(min=100, max=1000),
+            "description": faker.text(max_nb_chars=200),
+            "location": random.choice(["SPB", "MSK"]),
+            "published": True,
+            "genre_id": 1
+        }
+
+    @staticmethod
     def generate_movie_data():
         return {
             "name": f"Test Movie {uuid.uuid4()}",
@@ -47,4 +60,27 @@ class DataGenerator:
             "location": random.choice(["SPB", "MSK"]),
             "published": True,
             "genreId": 1
+        }
+
+    # data_generator.py
+    """
+    Добавим метод в DataGenerator который сразу делает рандомные данные
+    которые можно сразу передать в метод создания юзера через БД
+    """
+
+    @staticmethod
+    def generate_user_data() -> dict:
+        """Генерирует данные для тестового пользователя"""
+        from uuid import uuid4
+
+        return {
+            'id': f'{uuid4()}',  # генерируем UUID как строку
+            'email': DataGenerator.generate_random_email(),
+            'full_name': DataGenerator.generate_random_name(),
+            'password': DataGenerator.generate_random_password(),
+            'created_at': datetime.datetime.now(),
+            'updated_at': datetime.datetime.now(),
+            'verified': False,
+            'banned': False,
+            'roles': '{USER}'
         }

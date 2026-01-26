@@ -1,0 +1,44 @@
+import pytest
+from sqlalchemy.orm import Session
+from DB.db_client import get_db_session
+from DB.db_helper import DBHelper
+from utils.data_generator import DataGenerator
+
+
+@pytest.fixture(scope="module")
+def db_session() -> Session:
+    """
+    Фикстура, которая создает и возвращает сессию для работы с базой данных
+    После завершения теста сессия автоматически закрывается
+    """
+    db_session = get_db_session()
+    yield db_session
+    db_session.close()
+
+
+@pytest.fixture
+def movie_data_for_db():
+
+    return DataGenerator.generate_movie_data_for_db()
+
+
+@pytest.fixture(scope="function")
+def db_helper(db_session) -> DBHelper:
+    """
+    Фикстура для экземпляра хелпера
+    """
+    db_helper = DBHelper(db_session)
+    return db_helper
+
+
+@pytest.fixture(scope="function")
+def created_test_user(db_helper):
+    """
+    Фикстура, которая создает тестового пользователя в БД
+    и удаляет его после завершения теста
+    """
+    user = db_helper.DB_create_test_user(DataGenerator.generate_user_data())
+    yield user
+    # Cleanup после теста
+    if db_helper.DB_get_user_by_id(user.id):
+        db_helper.DB_delete_user(user)
